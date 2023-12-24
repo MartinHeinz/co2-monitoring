@@ -1,0 +1,24 @@
+version: '3.7'
+
+services:
+  agent:
+    image: grafana/agent:v0.23.0
+    container_name: agent
+    entrypoint:
+      - /bin/agent
+      - -config.file=/etc/agent/agent.yaml
+      - -metrics.wal-directory=/tmp/wal
+      - -config.expand-env
+      - -config.enable-read-api
+    environment:
+      HOSTNAME: agent
+      PROMETHEUS_HOST: ${PROMETHEUS_HOST}
+      PROMETHEUS_USERNAME: ${PROMETHEUS_USERNAME}
+      PROMETHEUS_PASSWORD: ${PROMETHEUS_PASSWORD}
+    network_mode: "host"
+    volumes:
+      # https://github.com/grafana/agent/blob/main/example/docker-compose/agent/config/agent.yaml
+      - ./agent/data:/etc/agent/data
+      - ./agent/config.yaml:/etc/agent/agent.yaml
+    ports:
+      - "12345:12345"

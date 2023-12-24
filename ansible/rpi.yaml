@@ -1,0 +1,59 @@
+---
+
+- name: Setup RPi
+  hosts: "{{ variable_host | default('rpi') }}"
+  become: true
+  vars:
+    work_dir: /workspace/
+    docker_install_compose: true
+    docker_compose_arch: armv7
+    pip_install_packages:
+      - name: docker
+  pre_tasks:
+    - name: Test connection with ping
+      ansible.builtin.ping:
+    - name: Copy docker-compose.yml and .env
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: "{{ work_dir }}"
+        owner: root
+        group: root
+        mode: preserve
+      loop:
+        - docker-compose.yml
+        - .env
+    - name: Create/Copy directory Grafana agent data
+      synchronize:
+        src: agent
+        dest: "{{ work_dir }}"
+
+  roles:
+    - geerlingguy.pip
+    - geerlingguy.docker
+
+  tasks:
+    - name: Install Bluetooth packages
+      ansible.builtin.apt:
+        pkg:
+          - bluetooth
+          - pi-bluetooth
+          - bluez
+
+    - name: Tear down existing services
+      community.docker.docker_compose:
+        project_src: "{{ work_dir }}"
+        state: absent
+    - name: Run `docker-compose up`
+      community.docker.docker_compose:
+        project_src: "{{ work_dir }}"
+        build: false
+      register: output
+
+    - name: Show results
+      ansible.builtin.debug:
+        var: output
+
+    - name: Verify that agent service is running
+      ansible.builtin.assert:
+        that:
+          - "output.services.agent.agent.state.running"

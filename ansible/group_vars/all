@@ -1,0 +1,5 @@
+---
+# The variables file used by the playbooks on all hosts.
+# These don't have to be explicitly imported by vars_files: they are autopopulated.
+
+gather_facts: true

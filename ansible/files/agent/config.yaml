@@ -1,0 +1,24 @@
+server:
+  log_level: info
+  http_listen_port: 12345
+
+# https://grafana.com/orgs/martinheinz
+metrics:
+  wal_directory: /tmp/wal
+  global:
+    scrape_interval: 60s
+  configs:
+    - name: aranet4-exporter
+      # https://grafana.com/docs/agent/latest/scraping-service/?plcmt=footer
+      scrape_configs:
+        - job_name: default
+          metrics_path: /metrics
+          static_configs:
+            # Must listen on HTTP
+            - targets: ['localhost:9100']  # aranet4-exporter:9100
+      remote_write:
+        - basic_auth:
+            # Go to https://grafana.com/orgs/martinheinz/hosted-metrics/<USERNAME> and generate API Key
+            username: ${PROMETHEUS_USERNAME}
+            password: ${PROMETHEUS_PASSWORD}
+          url: https://${PROMETHEUS_HOST}/api/prom/push
