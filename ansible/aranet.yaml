@@ -64,3 +64,21 @@
       ansible.builtin.assert:
         that:
           - "output.services.agent.agent.state.running"
+
+    - name: ensures Cron directory exists
+      ansible.builtin.file:
+        path: "/usr/local/sbin/cron/"
+        state: directory
+
+    - name: Create/Copy cron script
+      ansible.builtin.copy:
+        src: restart.sh
+        dest: /usr/local/sbin/cron/restart.sh
+        mode: '0755'
+
+    - name: Restart services every 12 hours
+      ansible.builtin.cron:
+        name: "Restart Aranet4-related services"
+        minute: "0"
+        hour: "6,12"
+        job: "/usr/local/sbin/cron/restart.sh"
