@@ -2,7 +2,7 @@
 
 Monitor home air quality metrics (CO2, temperature, humidity, etc.) using Aranet4 sensor, Raspberry Pi, Prometheus and Grafana
 
-<img src="./assets/dashboard.png" width=75% height=75%>
+<img src="./assets/dashboard.png">
 
 ## Requirements
 
