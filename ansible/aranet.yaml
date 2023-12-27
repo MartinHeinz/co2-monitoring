@@ -4,12 +4,16 @@
   hosts: "{{ variable_host | default('rpi') }}"
   become: true
   vars:
+    work_dir: /workspace/
     device: "{{ aranet_device }}"  # in format "DD:...:1F=office"
     interval: "{{ aranet_interval | default(60) }}"
   pre_tasks:
     - name: Test connection with ping
       ansible.builtin.ping:
   tasks:
+    - name: Test connection with ping
+      ansible.builtin.ping:
+
     - name: Install Aranet .deb package
       ansible.builtin.apt:
         deb: https://github.com/MartinHeinz/aranet4-exporter-go/releases/download/v1.0.1/aranet4-exporter_1.0.1_linux_armv6.deb
@@ -26,3 +30,37 @@
       ansible.builtin.systemd:
         state: restarted
         name: aranet4-exporter
+
+    - name: Copy docker-compose.yml and .env
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: "{{ work_dir }}"
+        owner: root
+        group: root
+        mode: preserve
+      loop:
+        - docker-compose.yml
+        - .env
+    - name: Create/Copy directory Grafana agent data
+      synchronize:
+        src: agent
+        dest: "{{ work_dir }}"
+
+    - name: Tear down existing services
+      community.docker.docker_compose:
+        project_src: "{{ work_dir }}"
+        state: absent
+    - name: Run `docker-compose up`
+      community.docker.docker_compose:
+        project_src: "{{ work_dir }}"
+        build: false
+      register: output
+
+    - name: Show results
+      ansible.builtin.debug:
+        var: output
+
+    - name: Verify that agent service is running
+      ansible.builtin.assert:
+        that:
+          - "output.services.agent.agent.state.running"

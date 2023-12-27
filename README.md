@@ -2,6 +2,8 @@
 
 Monitor home air quality metrics (CO2, temperature, humidity, etc.) using Aranet4 sensor, Raspberry Pi, Prometheus and Grafana
 
+<img src="./assets/dashboard.png" width=75% height=75%>
+
 ## Requirements
 
 - Raspberry Pi (or bluetooth-capable device)
@@ -50,7 +52,7 @@ cd ansible
 ansible-playbook rpi.yaml
 ```
 
-The above playbook install Docker, `docker-compose`, bluetooth-related packages, and deploys `docker-compose` setup.
+The above playbook install Docker, `docker-compose` and bluetooth-related packages.
 
 ### Bluetooth
 
