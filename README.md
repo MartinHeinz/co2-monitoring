@@ -12,8 +12,7 @@ Monitor home air quality metrics (CO2, temperature, humidity, etc.) using Aranet
 
 ## Quick Start
 
-- TODO - link article
-- TODO - Dashboard screenshot
+Accompanying article: [Monitoring Indoor Air Quality with Prometheus, Grafana and a CO2 Sensor](https://martinheinz.dev/blog/107)
 
 ### RPi
 
