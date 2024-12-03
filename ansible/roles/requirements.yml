@@ -1,6 +1,6 @@
 # ansible-galaxy install -r roles/requirements.yml
 # ansible-galaxy collection install community.docker
 - src: geerlingguy.pip
-  version: "2.1.0"
+  version: "3.1.0"
 - src: geerlingguy.docker
-  version: "4.2.3"
+  version: "7.4.3"

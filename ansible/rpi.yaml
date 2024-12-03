@@ -5,7 +5,7 @@
   become: true
   vars:
     docker_install_compose: true
-    docker_compose_arch: armv7
+    docker_compose_arch: "{{ ansible_architecture }}"
     pip_install_packages:
       - name: docker
   roles:
