@@ -16,7 +16,7 @@
 
     - name: Install Aranet .deb package
       ansible.builtin.apt:
-        deb: https://github.com/MartinHeinz/aranet4-exporter-go/releases/download/v1.0.1/aranet4-exporter_1.0.1_linux_arm64.deb
+        deb: https://github.com/MartinHeinz/aranet4-exporter-go/releases/download/v1.0.3/aranet4-exporter_1.0.3_linux_arm64.deb
 
     - name: Configure service
       ansible.builtin.template:
